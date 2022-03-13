@@ -15,11 +15,19 @@ export default {
     },
     videoSource() {
       const url = new URL(this.resource.fullUrl);
+      console.log(this.resource);
       switch(this.resource.type) {
         case 'youtube':
         {
           const id = url.searchParams.get('v');
           return `http://www.youtube.com/embed/${id}?autoplay=0`;
+        }
+        case 'tiktok':
+        {
+          const path = url.pathname.split('/');
+          console.log(path);
+          const last = path[path.length - 1];
+          return `https://www.tiktok.com/embed/${last}`;
         }
         default:
           return '';
@@ -30,6 +38,9 @@ export default {
     },
     isYoutube() {
       return this.resource.type === 'youtube';
+    },
+    isTiktok() {
+      return this.resource.type === 'tiktok';
     },
   },
   methods: {
@@ -53,6 +64,12 @@ export default {
       :src="videoSource"
       frameborder="0"
     />
+    <iframe v-if="isTiktok" type="text/html"
+      width="85px" height="150px"
+      :src="videoSource"
+      allow="encrypted-media;"
+      frameborder="0"
+    ></iframe>
   </div>
 </template>
 <style scoped>

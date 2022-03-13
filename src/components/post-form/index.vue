@@ -119,7 +119,7 @@ export default {
       this.videos = [];
       this.error = false;
     },
-    addPostId(id) {
+    addPostId({ id }) {
       if(this.content !== '') {
         this.content = this.content.trimEnd() + '\r\n';
       }

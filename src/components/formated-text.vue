@@ -17,10 +17,11 @@ export default {
 </script>
 <template>
   <div class="formated-text">
-    <span class="line" v-for="(line, i) of content" :key="`line-${i}`" name="line">
+    <template class="line" v-for="(line, i) of content" :key="`line-${i}`" name="line">
       <slot v-for="token of line.value" :name="token.type" :value="token.value">
       </slot>
-    </span>
+      <br v-if="i !== content.length - 1"/>
+    </template>
   </div>
 </template>
 <style scoped>

@@ -11,7 +11,6 @@ export default {
   props: {
     head: Boolean,
     id: Number,
-    quote: Boolean,
   },
   computed: {
     ...mapGetters([
@@ -22,29 +21,36 @@ export default {
     },
   },
   methods: {
-    onIdClick() {
-      this.$emitter.emit('quote-post', this.post.id);
+    onReplyClick() {
+      this.$emitter.emit('quote-post', {
+        id: this.post.id,
+      });
     },
   },
 }
 </script>
 <template>
-  <div class="post-container" :class="{ 'head-post': head, 'quote': quote, }">
+  <div class="post-container" :class="{ 'head-post': head }">
     <div class="header">
       <span class="title" v-if="post.title">{{ post.title }}</span>
       <span class="date">{{ new Date(post.createdAt).toLocaleDateString("ru-RU") }}</span>
-      <span class="id" @click="onIdClick">{{ `#${post.id}` }}</span>
+      <span class="id">{{ `#${post.id}` }}</span>
       <span v-if="post.sage" class="sage">SAGE</span>
       <router-link v-if="head" :to="`/thread/${post.id}`">Открыть</router-link>
+      <span class="reply" @click="onReplyClick">
+        <i class="gg-mail-reply"></i>
+      </span>
     </div>
     <div class="attachments-container" >
       <Attachment v-for="res in post.attachments" :resource="res" />
     </div>
     <FormatedText class="content" :text="post.content">
       <template #text="{ value }">{{ value }}</template>
-      <template #quote="{ value }">{{ value }}</template>
+      <template #quote="{ value }">
+        <span class="quote">{{ value }}</span>
+      </template>
       <template #id="{ value }">
-        <Post :id="value" quote />
+        <span class="id">#{{ value }}</span>
       </template>
     </FormatedText>
   </div>
@@ -60,15 +66,6 @@ export default {
 
 .head-post {
   background-color: var(--head-post-bg);
-}
-
-.quote {
-  border: 1px solid var(--dark-light-color0);
-  max-height: 60px;
-  
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis ellipsis;
 }
 
 .header {
@@ -92,11 +89,19 @@ export default {
 
 .id {
   font-weight: bolder;
-  cursor: pointer;
 }
 
 .sage {
   font-weight: bolder;
+}
+
+.reply {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.quote-ctrl {
+  cursor: pointer;
 }
 
 .attachments-container {
@@ -108,6 +113,10 @@ export default {
 
 .content {
   text-align: justify;
+}
+
+.quote {
+  color: green;
 }
 
 .post-quote {

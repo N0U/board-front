@@ -155,13 +155,14 @@ export default {
 </style>
 <style scoped>
 .container {
-  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 400px;
   border-radius: var(--border-radius);
   margin-top: 6px;
   margin-bottom: 6px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .container::v-deep input, .container textarea {

@@ -12,6 +12,9 @@ export default {
     head: Boolean,
     id: Number,
   },
+  data: () => ({
+    highlight: false,
+  }),
   computed: {
     ...mapGetters([
       'getPostById'
@@ -20,17 +23,36 @@ export default {
       return this.getPostById(this.id);
     },
   },
+  mounted() {
+    this.$emitter.on('scroll-to', this.onScrollTo);
+  },
+  unmounted() {
+    this.$emitter.off('scroll-to', this.onScrollTo);
+  },
   methods: {
     onReplyClick() {
       this.$emitter.emit('quote-post', {
         id: this.post.id,
       });
     },
+    onIdClick(id) {
+      this.$emitter.emit('scroll-to', {
+        id,
+      });
+    },
+    onScrollTo({ id }) {
+      if(id === this.id) {
+        this.highlight = true;
+        this.$el.scrollIntoView();
+      } else {
+        this.highlight = false;
+      }
+    },
   },
 }
 </script>
 <template>
-  <div class="post-container" :class="{ 'head-post': head }">
+  <div class="post-container" :class="{ 'head-post': head, 'highlight': highlight, }">
     <div class="header">
       <span class="title" v-if="post.title">{{ post.title }}</span>
       <span class="date">{{ new Date(post.createdAt).toLocaleDateString("ru-RU") }}</span>
@@ -50,7 +72,7 @@ export default {
         <span class="quote">{{ value }}</span>
       </template>
       <template #id="{ value }">
-        <span class="id">#{{ value }}</span>
+        <span class="id" @click="onIdClick(value)">#{{ value }}</span>
       </template>
     </FormatedText>
   </div>
@@ -62,6 +84,10 @@ export default {
   padding: 6px;
   border-radius: var(--border-radius);
   background-color: var(--post-bg);
+}
+
+.highlight {
+  border: 1px solid var(--color0);
 }
 
 .head-post {
@@ -89,6 +115,7 @@ export default {
 
 .id {
   font-weight: bolder;
+  cursor: pointer;
 }
 
 .sage {

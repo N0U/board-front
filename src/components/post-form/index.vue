@@ -137,7 +137,7 @@ export default {
         <ToggleButton v-if="!!threadId" v-model="sage">SAGE</ToggleButton>
       </div>
       <textarea maxlength="2000" placeholder="Текст" v-model.trim="content"></textarea>
-      <UploadcareWidget maxImages="3" v-model:url="imagesUrl" />
+      <UploadcareWidget :maxImages="3" v-model:url="imagesUrl" />
       <VideoInput v-if="videos.length < 3" class="row" @addVideo="addVideo"/>
       <VideInfo v-for="(v, i) in videos" :key="v.title" class="row" :video="v" @delete="deleteVideo(i)"/>
       <div class="error" v-if="error">{{ error }}</div>
